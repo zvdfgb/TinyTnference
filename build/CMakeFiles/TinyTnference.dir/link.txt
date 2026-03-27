@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/TinyTnference.dir/src/layer.cpp.o CMakeFiles/TinyTnference.dir/src/main.cpp.o CMakeFiles/TinyTnference.dir/src/tensor.cpp.o -o TinyTnference 
