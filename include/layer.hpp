@@ -37,6 +37,17 @@ private:
     Tensor bias_;    // 维度: (1, out_features)
 };
 
+class ReLULayer : public Layer {
+public:
+    // ReLU 不需要参数，使用默认构造函数即可
+    ReLULayer() = default;
+
+    // 实现前向传播：Output = max(0, Input)
+    Tensor forward(const Tensor& input) override;
+
+    std::string name() const override { return "ReLU"; }
+};
+
 } // namespace tiny_infer
 
 #endif

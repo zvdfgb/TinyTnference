@@ -22,4 +22,28 @@ Tensor LinearLayer::forward(const Tensor& input) {
     return temp;
 }
 
+Tensor ReLULayer::forward(const Tensor& input) {
+    // 1. 创建一个与输入形状完全相同的 Tensor 来存储结果
+    // 这里我们使用了 Tensor(const std::vector<int>& shape) 构造函数
+    Tensor output(input.shape());
+
+    // 2. 核心逻辑：逐元素应用 ReLU 函数
+    // 虽然我们在 Tensor 外部用 (row, col) 访问，但在这里我们可以
+    // 直接操作底层的 data_ vector，效率最高。
+    // 这里我们需要给 Tensor 类增加一个 public 接口来获取 data_ 的大小和访问权限。
+
+    // 暂时我们可以用我们在 Tensor 里写的 operator() 遍历：
+    int rows = input.shape()[0];
+    int cols = input.shape()[1];
+    
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            float val = input(i, j);
+            // f(x) = max(0, x)
+            output(i, j) = std::max(0.0f, val);
+        }
+    }
+
+    return output;
+}
 } // namespace tiny_infer
