@@ -48,6 +48,25 @@ public:
     std::string name() const override { return "ReLU"; }
 };
 
+// 这个类是我们后续构建网络的容器，可以把多个层串联起来
+class Sequential : public Layer {
+public:
+    Sequential() = default;
+
+    // 添加层到容器中
+    // 使用 std::shared_ptr 方便管理内存，防止内存泄漏
+    void add(std::shared_ptr<Layer> layer) {
+        layers_.push_back(layer);
+    }
+
+    // 实现前向传播：一键跑通所有层
+    Tensor forward(const Tensor& input) override;
+
+    std::string name() const override { return "Sequential"; }
+
+private:
+    std::vector<std::shared_ptr<Layer>> layers_;
+};
 } // namespace tiny_infer
 
 #endif

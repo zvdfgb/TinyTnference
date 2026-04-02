@@ -46,4 +46,18 @@ Tensor ReLULayer::forward(const Tensor& input) {
 
     return output;
 }
+
+Tensor Sequential::forward(const Tensor& input) {
+    // 初始输入
+    Tensor current_output = input;
+
+    // 遍历所有层，每一层的输出变成下一层的输入
+    for (auto& layer : layers_) {
+        // 关键点：这里调用的是虚函数 forward
+        // 编译器会自动根据 layer 的实际类型（Linear 或 ReLU）调用对应的实现
+        current_output = layer->forward(current_output);
+    }
+
+    return current_output;
+}
 } // namespace tiny_infer
