@@ -1,7 +1,7 @@
 #include "tensor.hpp"
 #include <algorithm> // for std::fill
 #include <iostream>
-
+#include <fstream>
 
 namespace tiny_infer {
 
@@ -48,6 +48,30 @@ void Tensor::display() const
     }
 }
 
+
+
+void Tensor::load_from_binary(const std::string& path) {
+    // 1. 以二进制模式打开文件
+    std::ifstream file(path, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("Failed to open weight file: " + path);
+    }
+
+    // 2. 检查文件大小是否与我们的 Tensor 空间匹配
+    // 计算我们 Tensor 需要多少字节：元素个数 * 4字节(float)
+    size_t expected_bytes = data_.size() * sizeof(float);
+    
+    // 3. 直接将文件内容读取到 data_ 向量的内存首地址
+    // data_.data() 返回底层数组的指针
+    file.read(reinterpret_cast<char*>(data_.data()), expected_bytes);
+
+    if (!file) {
+        throw std::runtime_error("Error occurred while reading file: " + path);
+    }
+
+    file.close();
+    std::cout << "Successfully loaded weights from: " << path << std::endl;
+}
 
 Tensor matmul(const Tensor& a, const Tensor& b)
 {

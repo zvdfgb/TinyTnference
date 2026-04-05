@@ -28,7 +28,8 @@ public:
     // 打印出来看看结果
     void display() const ;// 打印出来看看结果
 
-    
+    // 在 Tensor 类中增加
+    void load_from_binary(const std::string& path);
    
 
 private:

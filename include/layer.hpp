@@ -32,6 +32,9 @@ public:
     void set_weights(const Tensor& w) { weights_ = w; }
     void set_bias(const Tensor& b) { bias_ = b; }
 
+    // 返回引用，允许外部调用者通过这个引用修改内部数据
+    Tensor& weights() { return weights_; }
+    Tensor& bias() { return bias_; }
 private:
     Tensor weights_; // 维度: (in_features, out_features)
     Tensor bias_;    // 维度: (1, out_features)
