@@ -30,7 +30,8 @@ public:
 
     // 在 Tensor 类中增加
     void load_from_binary(const std::string& path);
-   
+    //可视化函数
+    void draw_ascii() const;
 
 private:
     std::vector<int> shape_;    // 存储维度，例如 {rows, cols}
@@ -39,8 +40,9 @@ private:
 
     // 矩阵乘法：C = A * B
     // 要求：A的列数 == B的行数
-Tensor matmul(const Tensor& a, const Tensor& b);
+    Tensor matmul(const Tensor& a, const Tensor& b);
 
+    
 } // namespace tiny_infer
 
 #endif

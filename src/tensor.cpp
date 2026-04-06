@@ -97,5 +97,27 @@ Tensor matmul(const Tensor& a, const Tensor& b)
     }
     return result;
 }
+
+
+void Tensor::draw_ascii() const {
+    // 假设 Tensor 形状是 (1, 784)
+    int width = 28;
+    int height = 28;
+
+    std::cout << "\n--- Visualizing Input Digit ---" << std::endl;
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            // 计算在一维数组中的偏移量
+            float val = data_[i * width + j];
+            
+            // 根据像素强度打印不同字符
+            if (val > 0.8f)      std::cout << "##"; // 黑色笔画
+            else if (val > 0.2f) std::cout << ".."; // 灰色边缘
+            else                 std::cout << "  "; // 白色背景
+        }
+        std::cout << std::endl; // 换行
+    }
+    std::cout << "-------------------------------\n" << std::endl;
+}
 //实现其他函数（后续更新。。）
 }
