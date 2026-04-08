@@ -1,59 +1,76 @@
 #include <iostream>
-#include "layer.hpp"
+#include <memory>
+#include <vector>
 #include "tensor.hpp"
+#include "layer.hpp"
 
 using namespace tiny_infer;
 
 int main() {
-    // 1. 定义网络
-    auto fc1 = std::make_shared<LinearLayer>(784, 128);
-    auto relu = std::make_shared<ReLULayer>();
-    auto fc2 = std::make_shared<LinearLayer>(128, 10);
-
-    // 2. 加载真实权重
-    // 注意路径：如果你在 build 目录下运行，路径应该是 "../scripts/fc1_w.bin"
     try {
+        // 1. 构建更加专业的多层感知机 (MLP) 结构
+        // 结构：Linear(784, 256) -> ReLU -> Linear(256, 128) -> ReLU -> Linear(128, 10)
+        auto fc1 = std::make_shared<LinearLayer>(784, 256);
+        auto fc2 = std::make_shared<LinearLayer>(256, 128);
+        auto fc3 = std::make_shared<LinearLayer>(128, 10);
+        auto relu = std::make_shared<ReLULayer>();
+
+        auto model = std::make_shared<Sequential>();
+        model->add(fc1);
+        model->add(relu);
+        model->add(fc2);
+        model->add(relu);
+        model->add(fc3);
+
+        // 2. 加载专业版模型权重
+        // 确保路径正确，指向你刚才运行 Python 脚本生成的 .bin 文件
+        std::cout << "Loading weights..." << std::endl;
         fc1->weights().load_from_binary("../scripts/fc1_w.bin");
         fc1->bias().load_from_binary("../scripts/fc1_b.bin");
         fc2->weights().load_from_binary("../scripts/fc2_w.bin");
         fc2->bias().load_from_binary("../scripts/fc2_b.bin");
-    } catch (const std::exception& e) {
-        std::cerr << "Weight load error: " << e.what() << std::endl;
-        return -1;
-    }
+        fc3->weights().load_from_binary("../scripts/fc3_w.bin");
+        fc3->bias().load_from_binary("../scripts/fc3_b.bin");
 
-    // 3. 准备输入数据
-    Tensor input({1, 784});
-    try {
-        // 加载刚才 Python 导出的那个数字 7（或随机数字）
+        // 3. 准备并加载真实的测试图片
+        Tensor input({1, 784});
         input.load_from_binary("../scripts/test_digit.bin");
-        std::cout << "Image loaded successfully." << std::endl;
+
+        // [重要优化] 可视化输入，确认图片是否正确
+        input.draw_ascii();
+
+        // [重要优化] 数据标准化处理
+        // 这一步必须与 Python 训练时的参数 (mean=0.1307, std=0.3081) 完全一致
+        std::cout << "Normalizing input data..." << std::endl;
+        input.normalize(0.1307f, 0.3081f);
+
+        // 4. 执行前向推理
+        std::cout << "Inference running..." << std::endl;
+        Tensor output = model->forward(input);
+
+        // 5. 结果解析：找到得分最高的类别
+        float max_score = -1e9;
+        int predicted_digit = -1;
+        
+        std::cout << "\nOutput Scores (Logits):" << std::endl;
+        for (int i = 0; i < 10; ++i) {
+            float score = output(0, i);
+            printf("Digit %d: %8.2f\n", i, score);
+            if (score > max_score) {
+                max_score = score;
+                predicted_digit = i;
+            }
+        }
+
+        std::cout << "\n======================================" << std::endl;
+        std::cout << "Final Result: The model thinks it's a [" << predicted_digit << "]" << std::endl;
+        std::cout << "======================================" << std::endl;
+
     } catch (const std::exception& e) {
-        std::cerr << "Image load error: " << e.what() << std::endl;
+        // 异常处理：捕获文件不存在或维度不匹配等错误
+        std::cerr << "\033[31m[ERROR]\033[0m " << e.what() << std::endl;
         return -1;
     }
 
-
-    // 4. 推理
-    Tensor hidden = fc1->forward(input);
-    Tensor activated = relu->forward(hidden);
-    Tensor output = fc2->forward(activated);
-
-    float max_score = -1e9;
-    int predicted_label = -1;
-
-    for (int i = 0; i < 10; ++i) {
-        float score = output(0, i);
-        std::cout << "Digit " << i << " score: " << score << std::endl;
-        if (score > max_score) {
-            max_score = score;
-            predicted_label = i;
-        }
-    }
-
-    std::cout << "\n========================================" << std::endl;
-    std::cout << "Final Prediction: This is digit " << predicted_label << "!" << std::endl;
-    std::cout << "========================================" << std::endl;
-    input.draw_ascii(); // 打印输出分数看看结果
     return 0;
 }

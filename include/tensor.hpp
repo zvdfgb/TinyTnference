@@ -30,8 +30,12 @@ public:
 
     // 在 Tensor 类中增加
     void load_from_binary(const std::string& path);
+
     //可视化函数
     void draw_ascii() const;
+
+    //标准化函数
+    void normalize(float mean, float stddev);
 
 private:
     std::vector<int> shape_;    // 存储维度，例如 {rows, cols}

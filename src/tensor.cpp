@@ -119,5 +119,12 @@ void Tensor::draw_ascii() const {
     }
     std::cout << "-------------------------------\n" << std::endl;
 }
+
+// 标准化函数：对 Tensor 中的每个元素进行标准化处理
+void Tensor::normalize(float mean, float stddev) {
+    for (float& val : data_) {
+        val = (val - mean) / stddev;
+    }
+}
 //实现其他函数（后续更新。。）
 }
