@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named TinyTnference
+# Target rules for targets named tiny_infer
 
 # Build rule for target.
-TinyTnference: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 TinyTnference
-.PHONY : TinyTnference
+tiny_infer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tiny_infer
+.PHONY : tiny_infer
 
 # fast build rule for target.
-TinyTnference/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/build
-.PHONY : TinyTnference/fast
+tiny_infer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/build
+.PHONY : tiny_infer/fast
 
 src/layer.o: src/layer.cpp.o
 .PHONY : src/layer.o
 
 # target to build an object file
 src/layer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/layer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/layer.cpp.o
 .PHONY : src/layer.cpp.o
 
 src/layer.i: src/layer.cpp.i
@@ -142,7 +142,7 @@ src/layer.i: src/layer.cpp.i
 
 # target to preprocess a source file
 src/layer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/layer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/layer.cpp.i
 .PHONY : src/layer.cpp.i
 
 src/layer.s: src/layer.cpp.s
@@ -150,7 +150,7 @@ src/layer.s: src/layer.cpp.s
 
 # target to generate assembly for a file
 src/layer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/layer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/layer.cpp.s
 .PHONY : src/layer.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -158,7 +158,7 @@ src/main.o: src/main.cpp.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -166,7 +166,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -174,7 +174,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 src/tensor.o: src/tensor.cpp.o
@@ -182,7 +182,7 @@ src/tensor.o: src/tensor.cpp.o
 
 # target to build an object file
 src/tensor.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/tensor.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/tensor.cpp.o
 .PHONY : src/tensor.cpp.o
 
 src/tensor.i: src/tensor.cpp.i
@@ -190,7 +190,7 @@ src/tensor.i: src/tensor.cpp.i
 
 # target to preprocess a source file
 src/tensor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/tensor.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/tensor.cpp.i
 .PHONY : src/tensor.cpp.i
 
 src/tensor.s: src/tensor.cpp.s
@@ -198,7 +198,7 @@ src/tensor.s: src/tensor.cpp.s
 
 # target to generate assembly for a file
 src/tensor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TinyTnference.dir/build.make CMakeFiles/TinyTnference.dir/src/tensor.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tiny_infer.dir/build.make CMakeFiles/tiny_infer.dir/src/tensor.cpp.s
 .PHONY : src/tensor.cpp.s
 
 # Help Target
@@ -209,7 +209,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... TinyTnference"
+	@echo "... tiny_infer"
 	@echo "... src/layer.o"
 	@echo "... src/layer.i"
 	@echo "... src/layer.s"

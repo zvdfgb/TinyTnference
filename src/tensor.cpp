@@ -2,6 +2,7 @@
 #include <algorithm> // for std::fill
 #include <iostream>
 #include <fstream>
+#include <omp.h>
 
 namespace tiny_infer {
 
@@ -73,28 +74,42 @@ void Tensor::load_from_binary(const std::string& path) {
     std::cout << "Successfully loaded weights from: " << path << std::endl;
 }
 
-Tensor matmul(const Tensor& a, const Tensor& b)
-{
-
+Tensor matmul(const Tensor& a, const Tensor& b) {
     // 1. 维度检查
     if (a.shape()[1] != b.shape()[0]) {
-        throw std::runtime_error("无法计算矩阵乘法：A的列数必须等于B的行数");
+        throw std::runtime_error("Matrix dimensions mismatch for matmul!");
     }
-    
-    int m = a.shape()[0];
-    int n = a.shape()[1];
-    int p = b.shape()[1];
 
-    Tensor result({m, p});
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < p; ++j) {
-            float sum = 0.0f;
-            for (int k = 0; k < n; ++k) {
-                sum += a(i, k) * b(k, j);
+    int M = a.shape()[0];
+    int K = a.shape()[1];
+    int N = b.shape()[1];
+
+    // 2. 创建结果张量
+    Tensor result({M, N});
+    
+    // 务必确保 result 的初始值为 0，因为接下来的逻辑是 +=
+    // （如果你的 Tensor 构造函数默认已经置 0，这一步可以省略，但写上更严谨）
+    for (int i = 0; i < M * N; ++i) {
+        // 假设你可以直接访问底层 vector，或者通过双重循环赋值
+        result(i / N, i % N) = 0.0f; 
+    }
+
+    // 3. 工业级优化：i-k-j 顺序 + OpenMP 多核并行
+    // 如果启用了 OpenMP，这行编译指令会让最外层的 i 循环被分配到你电脑的多个 CPU 核心上同时运行
+    #pragma omp parallel for
+    for (int i = 0; i < M; ++i) {
+        for (int k = 0; k < K; ++k) {
+            // 将 A 矩阵的标量提取出来，放在内层循环外面，减少重复访存
+            float temp_a = a(i, k);
+            
+            // 最内层循环：连续访问 B 矩阵的第 k 行，并连续写入 Result 的第 i 行
+            // 此时 CPU 的 Cache 预取机制 (Prefetching) 会达到最高效率
+            for (int j = 0; j < N; ++j) {
+                result(i, j) += temp_a * b(k, j);
             }
-            result(i, j) = sum;
         }
     }
+
     return result;
 }
 

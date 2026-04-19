@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/tiny_infer.dir/src/layer.cpp.o CMakeFiles/tiny_infer.dir/src/main.cpp.o CMakeFiles/tiny_infer.dir/src/tensor.cpp.o -o tiny_infer  /usr/lib/gcc/x86_64-linux-gnu/11/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 

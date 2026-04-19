@@ -3,6 +3,7 @@
 #include <vector>
 #include "tensor.hpp"
 #include "layer.hpp"
+#include <chrono> // 用于计时
 
 using namespace tiny_infer;
 
@@ -44,9 +45,22 @@ int main() {
         std::cout << "Normalizing input data..." << std::endl;
         input.normalize(0.1307f, 0.3081f);
 
-        // 4. 执行前向推理
+       
         std::cout << "Inference running..." << std::endl;
+
+        // 1. 记录开始时间
+        auto start_time = std::chrono::high_resolution_clock::now();
+
+        // 4. 执行前向推理
         Tensor output = model->forward(input);
+        // 3. 记录结束时间
+        auto end_time = std::chrono::high_resolution_clock::now();
+
+        // 4. 计算并打印耗时 (单位：毫秒)
+        std::chrono::duration<double, std::milli> duration = end_time - start_time;
+        std::cout << "--------------------------------------" << std::endl;
+        std::cout << "Inference Time: " << duration.count() << " ms" << std::endl;
+        std::cout << "--------------------------------------" << std::endl;
 
         // 5. 结果解析：找到得分最高的类别
         float max_score = -1e9;
