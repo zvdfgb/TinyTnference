@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "=== 1. Exporting Weights & Data ==="
-python3 scripts/train_mnist.py
+python3 scripts/train_minst.py
 
 echo "=== 2. Building C++ Engine ==="
 mkdir -p build
