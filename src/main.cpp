@@ -34,16 +34,17 @@ int main() {
         fc3->bias().load_from_binary("../scripts/fc3_b.bin");
 
         // 3. 准备并加载真实的测试图片
-        Tensor input({1, 784});
-        input.load_from_binary("../scripts/test_digit.bin");
+        const int BATCH_SIZE = 10;
+        Tensor input_batch({BATCH_SIZE, 784});
+        input_batch.load_from_binary("../scripts/batch_test.bin");
 
         // [重要优化] 可视化输入，确认图片是否正确
-        input.draw_ascii();
+        input_batch.draw_ascii();
 
         // [重要优化] 数据标准化处理
         // 这一步必须与 Python 训练时的参数 (mean=0.1307, std=0.3081) 完全一致
         std::cout << "Normalizing input data..." << std::endl;
-        input.normalize(0.1307f, 0.3081f);
+        input_batch.normalize(0.1307f, 0.3081f);
 
        
         std::cout << "Inference running..." << std::endl;
@@ -52,7 +53,7 @@ int main() {
         auto start_time = std::chrono::high_resolution_clock::now();
 
         // 4. 执行前向推理
-        Tensor output = model->forward(input);
+        Tensor output = model->forward(input_batch);
         // 3. 记录结束时间
         auto end_time = std::chrono::high_resolution_clock::now();
 
@@ -62,23 +63,18 @@ int main() {
         std::cout << "Inference Time: " << duration.count() << " ms" << std::endl;
         std::cout << "--------------------------------------" << std::endl;
 
-        // 5. 结果解析：找到得分最高的类别
-        float max_score = -1e9;
-        int predicted_digit = -1;
-        
-        std::cout << "\nOutput Scores (Logits):" << std::endl;
-        for (int i = 0; i < 10; ++i) {
-            float score = output(0, i);
-            printf("Digit %d: %8.2f\n", i, score);
-            if (score > max_score) {
-                max_score = score;
-                predicted_digit = i;
+        // 5. 解析结果：循环打印每一行的最大值
+        for (int b = 0; b < BATCH_SIZE; ++b) {
+            int pred = -1;
+            float max_s = -1e9;
+            for (int i = 0; i < 10; ++i) {
+                if (output(b, i) > max_s) {
+                    max_s = output(b, i);
+                    pred = i;
+                }
             }
+            std::cout << "第 " << b << " 张图预测结果: " << pred << std::endl;
         }
-
-        std::cout << "\n======================================" << std::endl;
-        std::cout << "Final Result: The model thinks it's a [" << predicted_digit << "]" << std::endl;
-        std::cout << "======================================" << std::endl;
 
     } catch (const std::exception& e) {
         // 异常处理：捕获文件不存在或维度不匹配等错误

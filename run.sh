@@ -10,3 +10,4 @@ make -j$(nproc)
 
 echo "=== 3. Running Inference ==="
 ./tiny_infer
+
